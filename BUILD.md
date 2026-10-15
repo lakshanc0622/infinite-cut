@@ -8,6 +8,33 @@ Sinhala version: [`BUILD-SI.md`](BUILD-SI.md).
 
 ---
 
+## Just want the Windows installer?
+
+Then do not build locally. Push this repository to GitHub and let its own
+runners do it — nothing to install on your machine, no toolchain, no FFmpeg.
+
+1. Push the repository to GitHub.
+2. **Actions** tab → **Build installers** → **Run workflow**.
+3. When the `windows-x86_64` job finishes (40–60 minutes), download the
+   artifact **InfiniteCut-windows-x86_64** from the run's summary page.
+4. Unzip it. Inside: `InfiniteCut-0.2.7-windows-x86_64-setup.exe` — the
+   double-click installer — and the `.msi` beside it.
+
+The first launch shows SmartScreen's warning, because the build is not
+signed: **More info** → **Run anyway**. That stops once you sign it with a
+code-signing certificate (set `WINDOWS_CERTIFICATE_PFX` and
+`WINDOWS_CERTIFICATE_PASSWORD` in the repository's secrets, and the workflow
+signs every build).
+
+For a published release with notes and checksums instead of a bare artifact,
+tag it: `git tag v0.2.7 && git push --tags`. That runs `release.yml`, which
+builds every platform and opens a **draft** release you look over and
+publish yourself.
+
+The rest of this file is for building on your own machine.
+
+---
+
 ## Windows
 
 ### 1. Rust
@@ -58,6 +85,39 @@ cargo build --profile app -p infinitecut
 
 It lands in `src\target\app\infinitecut.exe`. That exe needs the FFmpeg DLLs
 from `C:\ffmpeg\bin` beside it (or on PATH) to run on another machine.
+
+### 5. The installer, locally
+
+Install [Inno Setup 6](https://jrsoftware.org/isdl.php), then stage the
+folder the installer packs and compile it:
+
+```powershell
+$version = "0.2.7"
+$name    = "InfiniteCut-$version-windows-x86_64"
+New-Item -ItemType Directory -Force "stage\$name" | Out-Null
+Copy-Item src\target\app\infinitecut.exe "stage\$name"
+Copy-Item C:\ffmpeg\bin\*.dll            "stage\$name"
+# ONNX Runtime and sherpa-onnx are linked dynamically; their crates fetch
+# the DLLs during the build and leave them in the target directory. The exe
+# will not start without them beside it.
+Copy-Item src\target\app\*.dll           "stage\$name" -ErrorAction SilentlyContinue
+Copy-Item LICENSE, NOTICE.md, THIRD_PARTY_NOTICES.md "stage\$name"
+
+& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
+    "/DVersion=$version" "/DArch=x64compatible" "/DSuffix=x86_64" `
+    "/DStage=$PWD\stage\$name" "/DOut=$PWD\stage" `
+    assets\windows\infinitecut.iss
+```
+
+That writes `stage\InfiniteCut-0.2.7-windows-x86_64-setup.exe`.
+
+Install it on the machine you built on and launch it once before giving it
+to anyone. A missing-DLL error on startup means something the exe links was
+not copied into `stage\$name`: find it with
+`dumpbin /dependents stage\$name\infinitecut.exe`, or just use the GitHub
+Actions route, which pins every prebuilt dependency in
+`scripts/ci/deps.lock`, stages them all, and launches the bundle on a clean
+machine before it uploads it.
 
 ---
 

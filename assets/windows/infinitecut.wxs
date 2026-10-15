@@ -19,7 +19,7 @@
   <!-- One upgrade code for the life of the product, so a newer .msi
        replaces an older one rather than sitting beside it. -->
   <Package Name="Infinite Cut"
-           Manufacturer="Infinite Cut contributors"
+           Manufacturer="Infinite Minds Academy"
            Version="$(var.Version)"
            UpgradeCode="54CFF7B7-6CCB-44C9-9984-0F116C21702D"
            Scope="perMachine"

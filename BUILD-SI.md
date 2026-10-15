@@ -7,6 +7,38 @@ English: [`BUILD.md`](BUILD.md).
 
 ---
 
+## `.exe` installer එක විතරක් ඕනේ නම් — මේක තමයි ලේසිම ක්‍රමය
+
+ඔයාගේ PC එකේ මුකුත් install කරන්න ඕනේ නෑ. Repo එක GitHub එකට push කරලා,
+GitHub එකේම runners ලවා build කරගන්න.
+
+1. Repo එක GitHub එකට push කරන්න.
+2. **Actions** tab → **Build installers** → **Run workflow** button එක ඔබන්න.
+3. `windows-x86_64` job එක ඉවර වුණාම (විනාඩි 40–60ක්), ඒ run එකේ පිටුවේ
+   පහළින් තියෙන **InfiniteCut-windows-x86_64** artifact එක download කරන්න.
+4. Unzip කරන්න. ඇතුළේ `InfiniteCut-0.2.7-windows-x86_64-setup.exe` —
+   double-click කරලා install කරන installer එක — සහ `.msi` එකත් තියෙනවා.
+
+පළවෙනි වතාවට run කරනකොට Windows SmartScreen එක warning එකක් දෙනවා (build එක
+code-sign කරලා නැති නිසා): **More info** → **Run anyway**. Code-signing
+certificate එකක් ගත්තොත් `WINDOWS_CERTIFICATE_PFX` සහ
+`WINDOWS_CERTIFICATE_PASSWORD` කියලා repository secrets දෙකක් දාන්න — එතකොට
+workflow එකම sign කරනවා, warning එක නවතිනවා.
+
+Release එකක් විදිහට (notes + checksums එක්ක) ඕනේ නම් tag එකක් දාන්න:
+`git tag v0.2.7 && git push --tags`. ඒකෙන් `release.yml` run වෙලා **draft**
+release එකක් හදනවා — ඔයා බලලා publish කරන්න ඕනේ.
+
+> මේ workflow එකෙන් platforms ඔක්කොටම build වෙනවා (Windows, macOS, Linux).
+> ඔයාට ඕනේ Windows එක විතරයි, ඒක වෙනම job එකක් විදිහට ඉවර වෙනවා — අනිත්
+> ඒවා ඉවර වෙනකම් බලන් ඉන්න ඕනේ නෑ. Repo එක **public** නම් runner time එක
+> free. Private නම් macOS minutes 10 ගුණයක් ගාණයි, ඒ නිසා public කරන්න,
+> නැත්නම් `build-app.yml` matrix එකෙන් macOS rows අයින් කරන්න.
+
+පහළ තියෙන්නේ ඔයාගේම machine එකේ build කරන ක්‍රමයයි.
+
+---
+
 ## Windows
 
 ### පියවර 1 — Rust install කරන්න
@@ -62,6 +94,37 @@ cargo build --profile app -p infinitecut
 
 ඒක එන්නේ `src\target\app\infinitecut.exe` එකට. වෙන machine එකක run කරන්න නම්
 `C:\ffmpeg\bin` එකේ DLL files ඒ exe එක ළඟ තියෙන්න ඕනේ (නැත්නම් PATH එකේ).
+
+### පියවර 5 — Installer එක locally හදන්න
+
+[Inno Setup 6](https://jrsoftware.org/isdl.php) install කරලා:
+
+```powershell
+$version = "0.2.7"
+$name    = "InfiniteCut-$version-windows-x86_64"
+New-Item -ItemType Directory -Force "stage\$name" | Out-Null
+Copy-Item src\target\app\infinitecut.exe "stage\$name"
+Copy-Item C:\ffmpeg\bin\*.dll            "stage\$name"
+# ONNX Runtime සහ sherpa-onnx dynamic linked — ඒවායේ DLL build එකේදී
+# target folder එකට එනවා. ඒවා නැතුව exe එක start වෙන්නේම නෑ.
+Copy-Item src\target\app\*.dll           "stage\$name" -ErrorAction SilentlyContinue
+Copy-Item LICENSE, NOTICE.md, THIRD_PARTY_NOTICES.md "stage\$name"
+
+& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
+    "/DVersion=$version" "/DArch=x64compatible" "/DSuffix=x86_64" `
+    "/DStage=$PWD\stage\$name" "/DOut=$PWD\stage" `
+    assets\windows\infinitecut.iss
+```
+
+ඒකෙන් `stage\InfiniteCut-0.2.7-windows-x86_64-setup.exe` එක හැදෙනවා.
+
+කාටහරි දෙන්න කලින් ඒක install කරලා එක පාරක් open කරලා බලන්න. Start වෙනකොට
+"DLL missing" error එකක් ආවොත්, ඒ කියන්නේ `stage\$name` එකට copy වෙලා නැති
+DLL එකක් තියෙනවා —
+`dumpbin /dependents stage\$name\infinitecut.exe` එකෙන් හොයාගන්න පුළුවන්.
+GitHub Actions ක්‍රමය එහෙම ප්‍රශ්න නෑ: ඒක හැම dependency එකක්ම
+`scripts/ci/deps.lock` එකේ pin කරලා, upload කරන්න කලින් clean machine එකක
+bundle එක run කරලා බලනවා.
 
 ---
 

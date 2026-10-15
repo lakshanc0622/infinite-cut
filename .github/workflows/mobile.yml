@@ -3,8 +3,8 @@ name: Build for phones
 # Builds Infinite Cut for Android and iOS and uploads one artifact per phone,
 # named like the desktop bundles from build-app.yml:
 #
-#   Android  arm64  -> Infinite Cut-<version>-android-arm64.apk
-#   iOS      arm64  -> Infinite Cut-<version>-ios-arm64.ipa
+#   Android  arm64  -> InfiniteCut-<version>-android-arm64.apk
+#   iOS      arm64  -> InfiniteCut-<version>-ios-arm64.ipa
 #
 # Reusable, the way build-app.yml is: release.yml calls it on every tag,
 # so a release carries the phones beside the desktops. Pull requests build
@@ -244,12 +244,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir stage
-          cp src/target/release/apk/Infinite Cut.apk "stage/Infinite Cut-$VERSION-android-arm64.apk"
+          cp src/target/release/apk/Infinite Cut.apk "stage/InfiniteCut-$VERSION-android-arm64.apk"
           ls -l stage
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: Infinite Cut-android-arm64
+          name: InfiniteCut-android-arm64
           path: stage/*
           if-no-files-found: error
 
@@ -273,7 +273,7 @@ jobs:
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         timeout-minutes: 10
         with:
-          name: Infinite Cut-android-arm64
+          name: InfiniteCut-android-arm64
           path: apk
 
       # The emulator needs KVM, which the runner has but only root may
@@ -306,7 +306,7 @@ jobs:
           emulator-boot-timeout: 900
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-boot-anim -camera-back none -camera-front none
           disable-animations: true
-          script: scripts/ci/smoke-android.sh --out smoke-android --wait 60 apk/Infinite Cut-*.apk
+          script: scripts/ci/smoke-android.sh --out smoke-android --wait 60 apk/InfiniteCut-*.apk
 
       # The log, the screenshot and the rest, pass or fail.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -405,12 +405,12 @@ jobs:
           set -euo pipefail
           mkdir -p stage payload/Payload
           cp -R src/target/aarch64-apple-ios/release/InfiniteCut.app payload/Payload/
-          (cd payload && ditto -c -k --keepParent Payload "../stage/Infinite Cut-$VERSION-ios-arm64.ipa")
+          (cd payload && ditto -c -k --keepParent Payload "../stage/InfiniteCut-$VERSION-ios-arm64.ipa")
           ls -l stage
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: Infinite Cut-ios-arm64
+          name: InfiniteCut-ios-arm64
           path: stage/*
           if-no-files-found: error
 

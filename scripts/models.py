@@ -36,7 +36,9 @@ CRATES = ROOT / "src" / "crates"
 
 # The repository the mirror lives on, and the engine constant that must
 # agree with this file about which release holds it.
-REPO = "jub0t/Infinite Cut"
+# Upstream Concat's releases: where these model files actually
+# live. This fork hosts no mirror of its own.
+REPO = "jub0t/Concat"
 HOST_MODELS = CRATES / "infinitecut-host" / "src" / "models.rs"
 
 # Where each family's table lives in the engine, for --check.
@@ -52,22 +54,22 @@ TABLES = {
 # version to fill in. Installers and binaries, never an archive of a
 # folder - a person downloads the thing they run.
 BUNDLES = [
-    ("macos", "arm64", "dmg", "Infinite Cut-{v}-macos-arm64.dmg"),
-    ("macos", "x86_64", "dmg", "Infinite Cut-{v}-macos-x86_64.dmg"),
-    ("linux", "x86_64", "deb", "Infinite Cut-{v}-linux-x86_64.deb"),
-    ("linux", "x86_64", "rpm", "Infinite Cut-{v}-linux-x86_64.rpm"),
-    ("linux", "x86_64", "appimage", "Infinite Cut-{v}-x86_64.AppImage"),
-    ("linux", "x86_64", "pacman", "Infinite Cut-{v}-linux-x86_64.pkg.tar.zst"),
-    ("linux", "aarch64", "deb", "Infinite Cut-{v}-linux-aarch64.deb"),
-    ("linux", "aarch64", "rpm", "Infinite Cut-{v}-linux-aarch64.rpm"),
-    ("linux", "aarch64", "appimage", "Infinite Cut-{v}-aarch64.AppImage"),
-    ("linux", "aarch64", "pacman", "Infinite Cut-{v}-linux-aarch64.pkg.tar.zst"),
-    ("windows", "x86_64", "setup", "Infinite Cut-{v}-windows-x86_64-setup.exe"),
-    ("windows", "x86_64", "msi", "Infinite Cut-{v}-windows-x86_64.msi"),
-    ("windows", "aarch64", "setup", "Infinite Cut-{v}-windows-aarch64-setup.exe"),
-    ("windows", "aarch64", "msi", "Infinite Cut-{v}-windows-aarch64.msi"),
-    ("android", "arm64", "apk", "Infinite Cut-{v}-android-arm64.apk"),
-    ("ios", "arm64", "ipa", "Infinite Cut-{v}-ios-arm64.ipa"),
+    ("macos", "arm64", "dmg", "InfiniteCut-{v}-macos-arm64.dmg"),
+    ("macos", "x86_64", "dmg", "InfiniteCut-{v}-macos-x86_64.dmg"),
+    ("linux", "x86_64", "deb", "InfiniteCut-{v}-linux-x86_64.deb"),
+    ("linux", "x86_64", "rpm", "InfiniteCut-{v}-linux-x86_64.rpm"),
+    ("linux", "x86_64", "appimage", "InfiniteCut-{v}-x86_64.AppImage"),
+    ("linux", "x86_64", "pacman", "InfiniteCut-{v}-linux-x86_64.pkg.tar.zst"),
+    ("linux", "aarch64", "deb", "InfiniteCut-{v}-linux-aarch64.deb"),
+    ("linux", "aarch64", "rpm", "InfiniteCut-{v}-linux-aarch64.rpm"),
+    ("linux", "aarch64", "appimage", "InfiniteCut-{v}-aarch64.AppImage"),
+    ("linux", "aarch64", "pacman", "InfiniteCut-{v}-linux-aarch64.pkg.tar.zst"),
+    ("windows", "x86_64", "setup", "InfiniteCut-{v}-windows-x86_64-setup.exe"),
+    ("windows", "x86_64", "msi", "InfiniteCut-{v}-windows-x86_64.msi"),
+    ("windows", "aarch64", "setup", "InfiniteCut-{v}-windows-aarch64-setup.exe"),
+    ("windows", "aarch64", "msi", "InfiniteCut-{v}-windows-aarch64.msi"),
+    ("android", "arm64", "apk", "InfiniteCut-{v}-android-arm64.apk"),
+    ("ios", "arm64", "ipa", "InfiniteCut-{v}-ios-arm64.ipa"),
 ]
 
 

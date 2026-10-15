@@ -1,0 +1,48 @@
+name: Build installers
+
+# Press "Run workflow" on the Actions tab and this builds the app and leaves
+# the installers as downloadable artifacts. No tag, no release, no secrets.
+#
+# What you came for is the artifact named **InfiniteCut-windows-x86_64**:
+# a zip holding `InfiniteCut-<version>-windows-x86_64-setup.exe` (the
+# double-click installer) and the `.msi` beside it. Unzip, run the .exe.
+#
+# Windows SmartScreen will warn about an unsigned program the first time:
+# More info › Run anyway. It stops warning once the build is signed with a
+# code-signing certificate (set WINDOWS_CERTIFICATE_PFX and
+# WINDOWS_CERTIFICATE_PASSWORD in the repository's secrets).
+#
+# This builds every platform, because build-app.yml builds its whole matrix
+# and a workflow cannot pick rows out of it from here. Each target is its
+# own job, so the Windows installers appear as soon as that job finishes —
+# usually well before macOS — and a target that fails does not take the
+# others with it. On a public repository the runner time is free; on a
+# private one, macOS minutes bill at ten times Linux, so either make the
+# repository public or delete the macOS rows from build-app.yml's matrix.
+#
+# For a published release with notes and checksums instead, tag the commit
+# (`git tag v0.2.7 && git push --tags`) and release.yml does that.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: The branch, tag or commit to build. Blank builds this one.
+        type: string
+        required: false
+        default: ""
+
+concurrency:
+  group: installers-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build-app.yml
+    with:
+      ref: ${{ inputs.ref }}
+    secrets: inherit

@@ -4,7 +4,7 @@
 # was not in the folder, an old DirectML.dll found in System32 instead of
 # a new one (#303), an instruction an Ivy Bridge does not have (#313).
 #
-#   scripts/ci/smoke-windows.ps1 -Bundle stage\Infinite Cut-<version>-windows-<arch> [-Sde path\to\sde.exe]
+#   scripts/ci/smoke-windows.ps1 -Bundle stage\InfiniteCut-<version>-windows-<arch> [-Sde path\to\sde.exe]
 #
 # 1. Every DLL any program or library in the folder imports is either in
 #    the folder or one Windows itself provides. A DLL that only happens to

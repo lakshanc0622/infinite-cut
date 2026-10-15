@@ -5,9 +5,9 @@ name: Build app
 # architecture so nothing is cross-compiled, and uploads one artifact per
 # target:
 #
-#   macOS    arm64 (Apple silicon)   x86_64 (Intel)     -> Infinite Cut-*.dmg
-#   Linux    x86_64                  aarch64            -> Infinite Cut-*.deb, .rpm, .AppImage, .pkg.tar.zst
-#   Windows  x86_64                  (aarch64, #326)    -> Infinite Cut-*-setup.exe, .msi
+#   macOS    arm64 (Apple silicon)   x86_64 (Intel)     -> InfiniteCut-*.dmg
+#   Linux    x86_64                  aarch64            -> InfiniteCut-*.deb, .rpm, .AppImage, .pkg.tar.zst
+#   Windows  x86_64                  (aarch64, #326)    -> InfiniteCut-*-setup.exe, .msi
 #
 # Installers and binaries only: the program is not shipped as an archive
 # of a folder to unpack, so what a person downloads is what they run.
@@ -552,7 +552,7 @@ jobs:
           cp "src/target/${{ matrix.target }}/app/concat" "$app/Contents/MacOS/concat"
 
           # The icon set Apple wants: each size and its @2x twin.
-          iconset=Infinite Cut.iconset
+          iconset=InfiniteCut.iconset
           rm -rf "$iconset"; mkdir "$iconset"
           icons=assets/icons
           cp "$icons/infinitecut_logo_16.png"  "$iconset/icon_16x16.png"
@@ -564,7 +564,7 @@ jobs:
           cp "$icons/infinitecut_logo_256.png" "$iconset/icon_256x256.png"
           cp "$icons/infinitecut_logo_512.png" "$iconset/icon_256x256@2x.png"
           cp "$icons/infinitecut_logo_512.png" "$iconset/icon_512x512.png"
-          iconutil -c icns "$iconset" -o "$app/Contents/Resources/Infinite Cut.icns"
+          iconutil -c icns "$iconset" -o "$app/Contents/Resources/InfiniteCut.icns"
 
           cat > "$app/Contents/Info.plist" <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
@@ -621,7 +621,7 @@ jobs:
         run: |
           set -euo pipefail
           app=InfiniteCut.app
-          dmg="Infinite Cut-${VERSION}-macos-${{ matrix.arch }}.dmg"
+          dmg="InfiniteCut-${VERSION}-macos-${{ matrix.arch }}.dmg"
           if [ -n "${CERT_P12}" ] && [ -n "${IDENTITY}" ]; then
             keychain=$RUNNER_TEMP/signing.keychain-db
             echo "$CERT_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
@@ -650,7 +650,7 @@ jobs:
             codesign --force --deep -s - "$app"
           fi
 
-          hdiutil create -volname Infinite Cut -srcfolder "$app" -ov -format UDZO "$dmg"
+          hdiutil create -volname "Infinite Cut" -srcfolder "$app" -ov -format UDZO "$dmg"
 
           if [ -n "${APPLE_ID}" ] && [ -n "${TEAM_ID}" ] && [ -n "${APP_PASSWORD}" ] && [ -n "${IDENTITY}" ]; then
             codesign --force --timestamp -s "$IDENTITY" "$dmg"
@@ -677,7 +677,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          name="Infinite Cut-${VERSION}-linux-${{ matrix.arch }}"
+          name="InfiniteCut-${VERSION}-linux-${{ matrix.arch }}"
           mkdir -p "stage/$name/lib"
           cp "src/target/${{ matrix.target }}/app/concat" "stage/$name/concat"
           cp -a ffmpeg-dev/lib/*.so* "stage/$name/lib/"
@@ -694,7 +694,7 @@ jobs:
           Terminal=false
           StartupWMClass=concat
           DESKTOP
-          cp LICENSE THIRD_PARTY_NOTICES.md "stage/$name/"
+          cp LICENSE NOTICE.md THIRD_PARTY_NOTICES.md "stage/$name/"
           # The binary must resolve every library from the folder alone.
           # The whole ldd report goes to the public summary when it does
           # not, so the failure names the library instead of just a step.
@@ -732,7 +732,7 @@ jobs:
             tar -xJf sde.tar.xz -C sde --strip-components=1
             args+=(--sde "$PWD/sde/sde64")
           fi
-          scripts/ci/smoke-linux.sh "${args[@]}" "stage/Infinite Cut-${VERSION}-linux-${{ matrix.arch }}"
+          scripts/ci/smoke-linux.sh "${args[@]}" "stage/InfiniteCut-${VERSION}-linux-${{ matrix.arch }}"
 
       # Every x86_64 binary in the folder, disassembled and counted for
       # instructions an Ivy Bridge does not have, against what
@@ -745,7 +745,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get install -y llvm
-          scripts/ci/isa-scan.sh "stage/Infinite Cut-${VERSION}-linux-${{ matrix.arch }}"
+          scripts/ci/isa-scan.sh "stage/InfiniteCut-${VERSION}-linux-${{ matrix.arch }}"
 
       # Arch Linux package, from the same folder as the .deb and .rpm.
       # Arch ships x86_64 only, so aarch64 comes from Arch Linux ARM.
@@ -755,7 +755,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          name="Infinite Cut-${VERSION}-linux-${{ matrix.arch }}"
+          name="InfiniteCut-${VERSION}-linux-${{ matrix.arch }}"
           pkgver="${VERSION//-/_}"
           image=archlinux:base-devel
           if [ "${{ matrix.arch }}" = aarch64 ]; then
@@ -803,7 +803,7 @@ jobs:
           ARCH: ${{ matrix.appimage }}
         run: |
           set -euo pipefail
-          name="Infinite Cut-${VERSION}-linux-${{ matrix.arch }}"
+          name="InfiniteCut-${VERSION}-linux-${{ matrix.arch }}"
           export STAGE="$PWD/stage/$name"
 
           # What the packages add over the folder: the launcher, and a
@@ -825,7 +825,7 @@ jobs:
           # The AppDir: the binary and its lib/ under usr/bin, so the
           # rpath holds; the desktop entry and icon at the root, where
           # the tool wants them; AppRun is the binary.
-          appdir="$PWD/Infinite Cut.AppDir"
+          appdir="$PWD/InfiniteCut.AppDir"
           rm -rf "$appdir"
           mkdir -p "$appdir/usr/bin" "$appdir/usr/share/icons/hicolor/256x256/apps" "$appdir/usr/share/applications"
           cp "$STAGE/concat" "$appdir/usr/bin/concat"
@@ -852,7 +852,7 @@ jobs:
           # Extract-and-run: the runner has no FUSE to mount the tool with.
           # No "linux" in its name: every AppImage is for Linux, and the
           # AppImage catalog's check warns about names that say so.
-          appimage="stage/Infinite Cut-${VERSION}-${{ matrix.arch }}.AppImage"
+          appimage="stage/InfiniteCut-${VERSION}-${{ matrix.arch }}.AppImage"
           ./appimagetool --appimage-extract-and-run --runtime-file appimage-runtime "$appdir" "$appimage"
           chmod +x "$appimage"
 
@@ -873,8 +873,8 @@ jobs:
           set -euo pipefail
           for image in ubuntu:22.04 debian:12; do
             scripts/ci/smoke-linux.sh --container "$image" \
-              "stage/Infinite Cut-${VERSION}-linux-${{ matrix.arch }}.deb" \
-              "stage/Infinite Cut-${VERSION}-${{ matrix.arch }}.AppImage"
+              "stage/InfiniteCut-${VERSION}-linux-${{ matrix.arch }}.deb" \
+              "stage/InfiniteCut-${VERSION}-${{ matrix.arch }}.AppImage"
           done
 
       # ── Package: Windows ───────────────────────────────────────────────
@@ -891,7 +891,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           $ErrorActionPreference = "Stop"
-          $name = "Infinite Cut-$env:VERSION-windows-${{ matrix.arch }}"
+          $name = "InfiniteCut-$env:VERSION-windows-${{ matrix.arch }}"
           $dir = "stage\$name"
           New-Item -ItemType Directory -Force $dir | Out-Null
           Copy-Item "src\target\${{ matrix.target }}\app\infinitecut.exe" $dir
@@ -899,7 +899,7 @@ jobs:
           # The sherpa-onnx runtime, set aside by the download step above.
           Copy-Item "$env:SHERPA_DLL_DIR\*.dll" $dir
           Copy-Item "$env:ORT_DIR\lib\*.dll" $dir
-          Copy-Item LICENSE, THIRD_PARTY_NOTICES.md $dir
+          Copy-Item LICENSE, NOTICE.md, THIRD_PARTY_NOTICES.md $dir
           # The Visual C++ runtime DLLs anything in the folder imports, from
           # the newest redistributable folder Visual Studio carries.
           $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
@@ -963,12 +963,12 @@ jobs:
           if (-not $signtool) { throw "signtool.exe is not in the Windows SDK" }
           "SIGNTOOL=$($signtool.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
           "SIGNING_THUMBPRINT=$($cert.Thumbprint)" | Out-File -FilePath $env:GITHUB_ENV -Append
-          $dir = "stage\Infinite Cut-$env:VERSION-windows-${{ matrix.arch }}"
+          $dir = "stage\InfiniteCut-$env:VERSION-windows-${{ matrix.arch }}"
           $unsigned = Get-ChildItem $dir -Recurse -File -Include *.exe, *.dll |
             Where-Object { (Get-AuthenticodeSignature $_.FullName).Status -ne "Valid" }
           foreach ($file in $unsigned) {
             & $signtool.FullName sign /sha1 $cert.Thumbprint /s My /fd SHA256 `
-              /tr http://timestamp.digicert.com /td SHA256 /d Infinite Cut $file.FullName
+              /tr http://timestamp.digicert.com /td SHA256 /d "Infinite Cut" $file.FullName
             if ($LASTEXITCODE -ne 0) { throw "signtool failed on $($file.Name)" }
           }
           Write-Host "Signed $(@($unsigned).Count) files."
@@ -984,7 +984,7 @@ jobs:
         shell: pwsh
         env:
           VERSION: ${{ steps.version.outputs.version }}
-        run: scripts/ci/smoke-windows.ps1 -Bundle "stage\Infinite Cut-$env:VERSION-windows-${{ matrix.arch }}"
+        run: scripts/ci/smoke-windows.ps1 -Bundle "stage\InfiniteCut-$env:VERSION-windows-${{ matrix.arch }}"
 
       # The same, then `--version` under Intel's emulator posing as an Ivy
       # Bridge (#313). A step of its own, after the plain smoke test: in
@@ -1012,7 +1012,7 @@ jobs:
           $sde = (Get-ChildItem sde -Recurse -Filter sde.exe | Select-Object -First 1).FullName
           if (-not $sde) { throw "sde.exe is not in the archive" }
           Write-Host "SDE at $sde"
-          scripts/ci/smoke-windows.ps1 -Bundle "stage\Infinite Cut-$env:VERSION-windows-x86_64" -Sde $sde
+          scripts/ci/smoke-windows.ps1 -Bundle "stage\InfiniteCut-$env:VERSION-windows-x86_64" -Sde $sde
 
       # Every x86_64 binary in the folder, disassembled and counted for
       # instructions an Ivy Bridge does not have, against what
@@ -1024,7 +1024,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         # llvm-objdump from the LLVM installed above, on the path.
-        run: scripts/ci/isa-scan.sh "stage/Infinite Cut-${VERSION}-windows-${{ matrix.arch }}"
+        run: scripts/ci/isa-scan.sh "stage/InfiniteCut-${VERSION}-windows-${{ matrix.arch }}"
 
       # The installers, from the checked folder: Inno Setup's .exe and
       # WiX's .msi, each signed when the folder was.
@@ -1035,11 +1035,11 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           $ErrorActionPreference = "Stop"
-          $name = "Infinite Cut-$env:VERSION-windows-${{ matrix.arch }}"
+          $name = "InfiniteCut-$env:VERSION-windows-${{ matrix.arch }}"
           function Sign($file) {
             if (-not $env:SIGNING_THUMBPRINT) { return }
             & $env:SIGNTOOL sign /sha1 $env:SIGNING_THUMBPRINT /s My /fd SHA256 `
-              /tr http://timestamp.digicert.com /td SHA256 /d Infinite Cut $file
+              /tr http://timestamp.digicert.com /td SHA256 /d "Infinite Cut" $file
             if ($LASTEXITCODE -ne 0) { throw "signtool failed on $file" }
           }
           # The installer, from that folder: Inno Setup, which the x64
@@ -1078,6 +1078,6 @@ jobs:
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: Infinite Cut-${{ matrix.platform }}-${{ matrix.arch }}
+          name: InfiniteCut-${{ matrix.platform }}-${{ matrix.arch }}
           path: stage/*
           if-no-files-found: error

@@ -108,7 +108,7 @@ collect() {
   # Tombstones for a native crash, where the device lets them be read.
   adb logcat -d -b crash -v threadtime > "$out/logcat-crash.txt" 2>/dev/null
   if [ -f "$logcat_file" ]; then
-    grep -E ' concat +:' "$logcat_file" > "$out/concat.txt" || true
+    grep -E ' infinitecut +:' "$logcat_file" > "$out/concat.txt" || true
   fi
   set -e
 }
@@ -207,7 +207,7 @@ grep -q '^Status: ok' <<< "$started" || fail "am start did not report the launch
 # crash now and then while it settles, and that is not this app failing.
 # The app's lines read "concat  : <module>: <message>".
 fatal='FATAL EXCEPTION|Fatal signal [0-9]+|panicked at|ANR in |Preview failed'
-fatal+='| concat +: ([A-Za-z0-9_:]+: )?(preview: |could not start|close: event loop exited [(]ok=false[)])'
+fatal+='| infinitecut +: ([A-Za-z0-9_:]+: )?(preview: |could not start|close: event loop exited [(]ok=false[)])'
 
 # Every process the app has had since the launch: the ones the activity
 # manager reports starting, which a process that dies at once still has,
@@ -260,7 +260,7 @@ untestable_here() {
   local seen="its crash dump puts the fault in ONNX Runtime's CPU detection"
   if [ -z "$hit" ]; then
     ! grep -v -q -E 'Fatal signal 11 .*fault addr 0x8 ' <<< "$found" || return 0
-    ! grep -E -q ' concat +:' "$logcat_file" || return 0
+    ! grep -E -q ' infinitecut +:' "$logcat_file" || return 0
     hit=$(grep -E -m 1 -- "$blind" <<< "$crashes" || true)
     [ -n "$hit" ] || return 0
     seen="its crash dump names no frame of the app's (this translation writes none), and the crash matches the one the newer translation names: a SIGSEGV at 0x8 as the library loads, before the app's first line"
@@ -314,7 +314,7 @@ grep -i 'ResumedActivity' "$out/focus.txt" | grep -q "$package/" \
   || fail "the app's activity is not the one in front after ${wait_secs}s"
 # The app's own first line, from android_main: proof its native code ran,
 # and not only that a process by its name exists.
-grep -E -q ' concat +: ([A-Za-z0-9_:]+: )?Infinite Cut .* starting' "$logcat_file" \
+grep -E -q ' infinitecut +: ([A-Za-z0-9_:]+: )?Infinite Cut .* starting' "$logcat_file" \
   || fail "the app's first line (\"Infinite Cut <version> starting\") never reached logcat"
 if [ -n "$ready" ] && [ -z "$seen_ready" ]; then
   fail "no line matching '$ready' within ${wait_secs}s"

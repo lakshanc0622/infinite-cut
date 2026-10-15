@@ -17,8 +17,8 @@ platform: linux
 version: ${VERSION}
 section: video
 priority: optional
-maintainer: Infinite Cut contributors <jub0trd@gmail.com>
-vendor: Infinite Cut contributors
+maintainer: Infinite Minds Academy
+vendor: Infinite Minds Academy
 homepage: https://github.com/infinite-minds-academy/infinite-cut
 license: AGPL-3.0-or-later
 description: |
@@ -28,7 +28,7 @@ description: |
 
 contents:
   - src: concat
-    dst: /opt/infinitecut/concat
+    dst: /opt/infinitecut/infinitecut
     file_info:
       mode: 0755
   - src: lib/*
