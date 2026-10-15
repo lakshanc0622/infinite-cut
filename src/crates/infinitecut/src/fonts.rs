@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+﻿// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Jareer and Concat contributors
 
 //! The base fonts, lent to the window, and the faces it falls back on for
@@ -49,7 +49,7 @@ use slint::fontique_011::fontique::{self, FallbackKey, FamilyId, Language, Scrip
 /// megabytes rather than sixteen. Japanese and Traditional Chinese read
 /// in the Simplified face's forms where the regions differ; on a machine
 /// with a font of its own for them, that font comes first.
-const CJK_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansCJKsc-Infinite Cut.otf");
+const CJK_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansCJKsc-InfiniteCut.otf");
 
 /// Noto Sans Arabic UI 2.011, for Arabic, Persian and Urdu: the UI cut,
 /// whose ascent and descent fit a line of Latin, where Noto Sans Arabic's
@@ -57,27 +57,27 @@ const CJK_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansCJKsc-Infinite Cut.
 /// Naskh-like forms, not Nastaliq; every Urdu letter is there. From
 /// https://github.com/notofonts/arabic/releases/download/NotoSansArabicUI-v2.011/NotoSansArabicUI-v2.011.zip
 /// (SHA-256 f775ee259557195721466e99ec0316bbcd897f0429e25955f5d9582ca1202ce7).
-const ARABIC_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansArabicUI-Infinite Cut.ttf");
+const ARABIC_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansArabicUI-InfiniteCut.ttf");
 
 /// Noto Sans Hebrew 3.001. From
 /// https://github.com/notofonts/hebrew/releases/download/NotoSansHebrew-v3.001/NotoSansHebrew-v3.001.zip
 /// (SHA-256 df0a71814b4e63644cf40fcc4529111b61266b7a2dafbe95068b29a7520cc3cb).
-const HEBREW_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansHebrew-Infinite Cut.ttf");
+const HEBREW_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansHebrew-InfiniteCut.ttf");
 
 /// Noto Sans Devanagari 2.007, for Hindi. From
 /// https://github.com/notofonts/devanagari/releases/download/NotoSansDevanagari-v2.007/NotoSansDevanagari-v2.007.zip
 /// (SHA-256 820c7da45b1e63562cb41c0a8cac5d9a4202312043a3a040ed1325857ef469b1).
-const DEVANAGARI_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansDevanagari-Infinite Cut.ttf");
+const DEVANAGARI_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansDevanagari-InfiniteCut.ttf");
 
 /// Noto Sans Bengali 3.011. From
 /// https://github.com/notofonts/bengali/releases/download/NotoSansBengali-v3.011/NotoSansBengali-v3.011.zip
 /// (SHA-256 2aca24bf71665e66c32e14862ee58857dd8b8b07b6321ec7c96f3121ad6683b1).
-const BENGALI_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansBengali-Infinite Cut.ttf");
+const BENGALI_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansBengali-InfiniteCut.ttf");
 
 /// Noto Sans Thai 2.002, the loopless face Thai interfaces are set in.
 /// From https://github.com/notofonts/thai/releases/download/NotoSansThai-v2.002/NotoSansThai-v2.002.zip
 /// (SHA-256 af889cc673fc714060ce5e4e088fbad32aa4c0571a19958efeaff128a22da485).
-const THAI_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansThai-Infinite Cut.ttf");
+const THAI_FALLBACK: &[u8] = include_bytes!("../fonts/NotoSansThai-InfiniteCut.ttf");
 
 /// A face the window falls back on, and the fallback lists it goes on: a
 /// script, and the locales fontique keeps a list of its own for under it
