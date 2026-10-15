@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Infinite Cut's Windows Installer package, the .msi beside the Inno Setup .exe.
+
+  Built by build-app.yml with WiX from the staged folder the .exe is made
+  of, so the two installers ship the same files. The .exe is the
+  one a person double-clicks; this is the one an administrator deploys -
+  Group Policy, Intune, winget - and it installs for the machine, into
+  Program Files, with a Start menu entry and a clean uninstall. Handed in:
+
+    wix build -arch x64 -d Version=0.2.7 -d Root=C:\...\Infinite Cut
+              -d Stage=C:\...\stage\InfiniteCut-0.2.7-windows-x86_64
+              -o stage\InfiniteCut-0.2.7-windows-x86_64.msi assets\windows\infinitecut.wxs
+
+  Root is the repository: WiX resolves a source path against where it is
+  run from, not against this file.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <!-- One upgrade code for the life of the product, so a newer .msi
+       replaces an older one rather than sitting beside it. -->
+  <Package Name="Infinite Cut"
+           Manufacturer="Infinite Cut contributors"
+           Version="$(var.Version)"
+           UpgradeCode="54CFF7B7-6CCB-44C9-9984-0F116C21702D"
+           Scope="perMachine"
+           Language="1033">
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Infinite Cut is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="infinitecut.ico" SourceFile="$(var.Root)\assets\icons\infinitecut.ico" />
+    <Property Id="ARPPRODUCTICON" Value="infinitecut.ico" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/infinite-minds-academy/infinite-cut" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Infinite Cut" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ShortcutFolder" Name="Infinite Cut" />
+    </StandardDirectory>
+
+    <Feature Id="Main" Title="Infinite Cut" Level="1">
+      <ComponentGroupRef Id="Program" />
+      <ComponentRef Id="StartMenu" />
+    </Feature>
+
+    <!-- Every file in the staged folder, as it is there. -->
+    <ComponentGroup Id="Program" Directory="INSTALLFOLDER">
+      <Files Include="$(var.Stage)\**" />
+    </ComponentGroup>
+
+    <Component Id="StartMenu" Directory="ShortcutFolder" Guid="8EDDD21D-477A-4F7E-AEE3-9FE40B13D0CE">
+      <Shortcut Id="StartMenuShortcut"
+                Name="Infinite Cut"
+                Description="Video editor"
+                Target="[INSTALLFOLDER]infinitecut.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="infinitecut.ico" />
+      <RemoveFolder Id="RemoveShortcutFolder" On="uninstall" />
+      <RegistryValue Root="HKCU" Key="Software\Infinite Cut" Name="StartMenu" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+  </Package>
+</Wix>

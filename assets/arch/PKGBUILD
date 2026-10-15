@@ -1,0 +1,30 @@
+# Maintainer: Infinite Minds Academy
+# Packaging originally written for Concat by noxygalaxy.
+pkgname=infinitecut
+pkgver=${INFINITECUT_VERSION:?INFINITECUT_VERSION must be set}
+pkgrel=1
+pkgdesc="Free and open source video editor"
+arch=('x86_64' 'aarch64')
+url="https://github.com/infinite-minds-academy/infinite-cut"
+license=('AGPL-3.0-or-later')
+depends=('glibc' 'gtk3' 'fontconfig' 'freetype2' 'libxkbcommon' 'mesa' 'alsa-lib')
+options=('!strip' '!debug')
+source=()
+
+stage=${INFINITECUT_STAGE:?INFINITECUT_STAGE must point at the staged folder}
+
+package() {
+  install -Dm755 "$stage/infinitecut" "$pkgdir/opt/infinitecut/infinitecut"
+  install -d "$pkgdir/opt/infinitecut/lib"
+  cp -a "$stage"/lib/. "$pkgdir/opt/infinitecut/lib/"
+
+  install -d "$pkgdir/usr/bin"
+  printf '#!/bin/sh\nexec /opt/infinitecut/infinitecut "$@"\n' > "$pkgdir/usr/bin/infinitecut"
+  chmod 755 "$pkgdir/usr/bin/infinitecut"
+  install -Dm644 "$stage/infinitecut.desktop" "$pkgdir/usr/share/applications/infinitecut.desktop"
+  sed -i 's|^Exec=infinitecut|Exec=/opt/infinitecut/infinitecut %U|' "$pkgdir/usr/share/applications/infinitecut.desktop"
+  install -Dm644 "$stage/infinitecut.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/infinitecut.png"
+
+  install -Dm644 "$stage/LICENSE" "$pkgdir/usr/share/licenses/infinitecut/LICENSE"
+  install -Dm644 "$stage/THIRD_PARTY_NOTICES.md" "$pkgdir/usr/share/licenses/infinitecut/THIRD_PARTY_NOTICES.md"
+}
