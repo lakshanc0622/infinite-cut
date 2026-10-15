@@ -1,17 +1,17 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Second pass: the things a blanket rewrite cannot get right.
 
 Four kinds of fix:
-  * compile-breaking — the gRPC service name became "Infinite Cut" (a Rust
+  * compile-breaking â€” the gRPC service name became "Infinite Cut" (a Rust
     identifier with a space in it), and the workspace dependency on the
     root crate still pointed at crates/concat.
-  * functionally wrong — the model mirror URL was rewritten to a repository
+  * functionally wrong â€” the model mirror URL was rewritten to a repository
     that does not exist, the update feed still pointed at upstream's
     releases, and the Windows installer kept upstream's product GUIDs, so
     it would have upgraded over an installed Concat.
-  * grammar — "a Infinite Cut", and inflected brand forms in de, hr and ko
+  * grammar â€” "a Infinite Cut", and inflected brand forms in de, hr and ko
     that a word-boundary match never saw.
-  * provenance — packaging URLs that should name this fork, not upstream.
+  * provenance â€” packaging URLs that should name this fork, not upstream.
 
 Usage: patch.py <tree>
 """
@@ -21,7 +21,7 @@ import re
 import sys
 import uuid
 
-REPO = "infinite-minds-academy/infinite-cut"
+REPO = "lakshanc0622/infinite-cut"
 VENDOR = "Infinite Minds Academy"
 
 
@@ -167,12 +167,12 @@ def main() -> int:
     edit(j("src/crates/infinitecut/locales/de.json"), [
         ("Concats Spiegel", "Infinite Cut Spiegel")], required=False)
     edit(j("src/crates/infinitecut/locales/hr.json"), [
-        ("Concatov zrcalni poslužitelj", "Zrcalni poslužitelj Infinite Cuta"),
+        ("Concatov zrcalni posluÅ¾itelj", "Zrcalni posluÅ¾itelj Infinite Cuta"),
         ("Preuzimanje Concata", "Preuzimanje Infinite Cuta")], required=False)
     ko = j("src/crates/infinitecut/locales/ko.json")
     with open(ko, encoding="utf-8") as handle:
         text = handle.read()
-    text = re.sub(r"Concat(?=[을이가는])", "Infinite Cut", text)
+    text = re.sub(r"Concat(?=[ì„ì´ê°€ëŠ”])", "Infinite Cut", text)
     with open(ko, "w", encoding="utf-8") as handle:
         handle.write(text)
     print(f"  patched {ko}")

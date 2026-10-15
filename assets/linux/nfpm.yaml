@@ -1,4 +1,4 @@
-# Infinite Cut's Linux packages: one description for the .deb and the .rpm.
+﻿# Infinite Cut's Linux packages: one description for the .deb and the .rpm.
 #
 # Built by build-app.yml with nfpm from the staged folder the AppImage is
 # also made of, so every Linux bundle ships the same files. The program lives
@@ -19,7 +19,7 @@ section: video
 priority: optional
 maintainer: Infinite Minds Academy
 vendor: Infinite Minds Academy
-homepage: https://github.com/infinite-minds-academy/infinite-cut
+homepage: https://github.com/lakshanc0622/infinite-cut
 license: AGPL-3.0-or-later
 description: |
   Free and open source video editor.

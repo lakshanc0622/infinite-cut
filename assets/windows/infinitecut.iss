@@ -1,4 +1,4 @@
-; Infinite Cut's Windows installer.
+﻿; Infinite Cut's Windows installer.
 ;
 ; Built by build-app.yml with Inno Setup from the staged folder the .msi
 ; is also made of, so the two ship the same files; this is the one a
@@ -37,9 +37,9 @@ AppName=Infinite Cut
 AppVersion={#Version}
 AppVerName=Infinite Cut {#Version}
 AppPublisher=Infinite Minds Academy
-AppPublisherURL=https://github.com/infinite-minds-academy/infinite-cut
-AppSupportURL=https://github.com/infinite-minds-academy/infinite-cut/issues
-AppUpdatesURL=https://github.com/infinite-minds-academy/infinite-cut/releases
+AppPublisherURL=https://github.com/lakshanc0622/infinite-cut
+AppSupportURL=https://github.com/lakshanc0622/infinite-cut/issues
+AppUpdatesURL=https://github.com/lakshanc0622/infinite-cut/releases
 DefaultDirName={autopf}\Infinite Cut
 DefaultGroupName=Infinite Cut
 DisableProgramGroupPage=yes

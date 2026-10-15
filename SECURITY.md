@@ -1,4 +1,4 @@
-# Security Policy
+﻿# Security Policy
 
 ## Supported Versions
 
@@ -15,9 +15,9 @@ releases are not patched.
 Please do not open a public issue for a security problem.
 
 Report it privately through GitHub's advisory form:
-https://github.com/infinite-minds-academy/infinite-cut/security/advisories/new
+https://github.com/lakshanc0622/infinite-cut/security/advisories/new
 
-Include the version (Settings › About), the platform, and steps to
+Include the version (Settings â€º About), the platform, and steps to
 reproduce. A proof of concept helps; a project file that triggers the
 problem helps most.
 
@@ -38,7 +38,7 @@ Infinite Cut runs entirely on your machine. Reports we care about most:
   was not given.
 - A downloaded model or its mirror being swapped for something else
   without the digest check catching it.
-- The API server (`infinitecut-cli serve`, or Settings › Remote) accepting a
+- The API server (`infinitecut-cli serve`, or Settings â€º Remote) accepting a
   call it should have refused: a missing or wrong token, on any address,
   or a server that started with no token at all.
 

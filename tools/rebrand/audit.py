@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Audit the rebranded tree. Usage: audit.py <upstream> <tree>"""
 
 import json
@@ -15,7 +15,7 @@ notes: list[str] = []
 
 
 def check(name: str, ok: bool, detail: str = "") -> None:
-    print(f"  [{'PASS' if ok else 'FAIL'}] {name}" + (f" — {detail}" if detail else ""))
+    print(f"  [{'PASS' if ok else 'FAIL'}] {name}" + (f" â€” {detail}" if detail else ""))
     if not ok:
         fails.append(name)
 
@@ -134,7 +134,7 @@ def main() -> int:
           "6C4D5D8E-9B2A-4F3B-8E1C-5A7D2B9F0C11" not in wxs)
     updates = open(os.path.join(tree, "src/crates/infinitecut-host/src/updates.rs"), encoding="utf-8").read()
     check("update feed points at this fork",
-          "api.github.com/repos/infinite-minds-academy/infinite-cut" in updates)
+          "api.github.com/repos/lakshanc0622/infinite-cut" in updates)
 
     print("\nAssets and links")
     referenced = [

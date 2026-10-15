@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Concat -> Infinite Cut rebrand.
 
 Deliberately conservative. Three things are NEVER rewritten, because
@@ -30,7 +30,7 @@ DISPLAY = "Infinite Cut"      # what a human reads
 SLUG = "infinitecut"          # crate / binary / file-name form
 APP_ID = "online.aisolution.infinitecut"
 VENDOR = "Infinite Minds Academy"
-REPO = "infinite-minds-academy/infinite-cut"   # change when the repo exists
+REPO = "lakshanc0622/infinite-cut"   # change when the repo exists
 
 CRATES = [
     "core", "media", "project", "render", "export", "host", "api",

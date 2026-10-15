@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+﻿// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Jareer and Concat contributors
 
 //! Which release this is, which releases are out, and putting one of them
@@ -42,7 +42,7 @@ pub const FIRST_SWITCHABLE: Version = Version::new(0, 2, 5);
 
 /// GitHub's list of the repository's releases, newest first. A hundred
 /// covers years of releases at this pace.
-const RELEASES_URL: &str = "https://api.github.com/repos/infinite-minds-academy/infinite-cut/releases?per_page=100";
+const RELEASES_URL: &str = "https://api.github.com/repos/lakshanc0622/infinite-cut/releases?per_page=100";
 
 /// What a download that was stopped says.
 pub const CANCELLED: &str = "the download was cancelled";

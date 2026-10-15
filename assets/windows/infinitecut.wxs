@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Infinite Cut's Windows Installer package, the .msi beside the Inno Setup .exe.
 
@@ -29,7 +29,7 @@
 
     <Icon Id="infinitecut.ico" SourceFile="$(var.Root)\assets\icons\infinitecut.ico" />
     <Property Id="ARPPRODUCTICON" Value="infinitecut.ico" />
-    <Property Id="ARPURLINFOABOUT" Value="https://github.com/infinite-minds-academy/infinite-cut" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/lakshanc0622/infinite-cut" />
 
     <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="INSTALLFOLDER" Name="Infinite Cut" />

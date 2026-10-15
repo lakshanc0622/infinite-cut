@@ -1,4 +1,4 @@
-{
+﻿{
   # Infinite Cut on Nix, Linux only: the people asking for a flake run Linux, and
   # the macOS and Windows builds ship from release.yml.
   #
@@ -212,7 +212,7 @@
 
           meta = {
             description = "Free and open source video editor";
-            homepage = "https://github.com/infinite-minds-academy/infinite-cut";
+            homepage = "https://github.com/lakshanc0622/infinite-cut";
             license = pkgs.lib.licenses.agpl3Plus;
             platforms = systems;
             mainProgram = "concat";
