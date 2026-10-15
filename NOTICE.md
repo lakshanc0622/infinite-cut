@@ -60,6 +60,15 @@ written for one is not silently pointed at the other.
 code-signing policy, release audit log, translated READMEs and sponsor
 material — all of which describe the Concat project rather than this one.
 
+**One upstream change taken back out.** Forked from upstream `main` a day
+after the 0.2.7 release, which carried an unreleased change drawing the
+Windows window's text with ClearType (LCD coverage on the DirectX 12
+surface, jub0t/concat#278). On a desktop GPU with ClearType on, that build
+crashed with an access violation as the window opened, while the 0.2.7
+release ran on the same machine. The three files it touched in
+`src/patches/i-slint-renderer-skia/` are restored to their 0.2.7 versions;
+text is drawn greyscale, as in the release.
+
 **Deliberately left alone.** Effect identifiers (`concat.blur`,
 `concat.dissolve`, and the rest) and the `concat.json` project manifest keep
 their names. They are written into saved projects and into every effect
